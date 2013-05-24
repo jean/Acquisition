@@ -7,7 +7,6 @@ Changelog
 - Don't raise an attribute error for ``__iter__`` if the fallback to
   ``__getitem__`` succeeds.  LP #1155760.
 
-
 4.0 (2013-02-24)
 ----------------
 

@@ -11,10 +11,18 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""Setup for the Acquisition distribution
-"""
+
 import os
 from setuptools import setup, find_packages, Extension
+
+README = open(os.path.join('src', 'Acquisition', 'README.txt')).read()
+CHANGES = open('CHANGES.rst').read()
+
+ext_modules = [
+    Extension("Acquisition._Acquisition",
+              [os.path.join('src', 'Acquisition', '_Acquisition.c')],
+              include_dirs=['include', 'src']),
+]
 
 setup(
     name='Acquisition',
@@ -22,12 +30,10 @@ setup(
     url='http://pypi.python.org/pypi/Acquisition',
     license='ZPL 2.1',
     description="Acquisition is a mechanism that allows objects to obtain "
-    "attributes from the containment hierarchy they're in.",
+        "attributes from the containment hierarchy they're in.",
     author='Zope Foundation and Contributors',
     author_email='zope-dev@zope.org',
-    long_description=open(
-        os.path.join('src', 'Acquisition', 'README.txt')).read() + '\n' +
-        open('CHANGES.txt').read(),
+    long_description='\n\n'.join([README, CHANGES]),
     packages=find_packages('src'),
     package_dir={'': 'src'},
     classifiers=[
@@ -42,13 +48,9 @@ setup(
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: Implementation :: CPython",
     ],
-    ext_modules=[Extension("Acquisition._Acquisition",
-                           [os.path.join('src', 'Acquisition',
-                                         '_Acquisition.c')],
-                           include_dirs=['include', 'src']),
-                 ],
+    ext_modules=ext_modules,
     install_requires=[
-        'ExtensionClass >= 4.0a1',
+        'ExtensionClass >= 4.1a1',
         'zope.interface',
     ],
     include_package_data=True,
