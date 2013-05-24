@@ -11,6 +11,16 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
+
+import sys
+
+if sys.version_info >= (3, ):
+    import pickle as cPickle
+    unicode = str
+else:
+    import cPickle
+
+
 """Acquisition test cases (and useful examples)
 
   Acquisition [1] is a mechanism that allows objects to obtain
@@ -31,7 +41,7 @@
 
     >>> class A(Acquisition.Implicit):
     ...   def report(self):
-    ...     print self.color
+    ...     print(self.color)
 
     >>> a = A()
     >>> c = C()
@@ -117,7 +127,7 @@
       automatically obtained from the environment.  Instead, the
       method 'aq_aquire' must be used, as in::
 
-        print c.a.aq_acquire('color')
+        print(c.a.aq_acquire('color'))
 
       To support explicit acquisition, an object should inherit
       from the mix-in class 'Acquisition.Explicit'.
@@ -231,7 +241,7 @@
         >>> def find_nice(self, ancestor, name, object, extra):
         ...     return hasattr(object,'isNice') and object.isNice
 
-        >>> print a.b.c.aq_acquire('p', find_nice)
+        >>> print(a.b.c.aq_acquire('p', find_nice))
         spam(Nice) and I am nice!
 
       The filtered acquisition in the last line skips over the first
@@ -571,7 +581,7 @@ def test__of__exception():
     >>> class X(Acquisition.Implicit):
     ...     def __of__(self, parent):
     ...         if Acquisition.aq_base(parent) is not parent:
-    ...             raise UserError, 'ack'
+    ...             raise UserError('ack')
     ...         return X.inheritedAttribute('__of__')(self, parent)
     ...
     >>> a = I('a')
@@ -1229,7 +1239,8 @@ def test_aq_inContextOf():
 
     >>> class A(Acquisition.Implicit):
     ...     def hi(self):
-    ...         print "%s()" % self.__class__.__name__, self.color
+    ...         print("%s()" % self.__class__.__name__)
+    ...         print(self.color)
 
     >>> class Location(object):
     ...     __parent__ = None
@@ -1237,14 +1248,16 @@ def test_aq_inContextOf():
     >>> b=B()
     >>> b.a=A()
     >>> b.a.hi()
-    A() red
+    A()
+    red
     >>> b.a.color='green'
     >>> b.a.hi()
-    A() green
+    A()
+    green
     >>> try:
     ...     A().hi()
-    ...     raise 'Program error', 'spam'
-    ... except AttributeError: pass
+    ... except AttributeError:
+    ...     pass
     A()
 
        New test for wrapper comparisons.
@@ -1399,21 +1412,24 @@ def test_explicit_acquisition():
 
     >>> class A(Acquisition.Explicit):
     ...     def hi(self):
-    ...         print self.__class__.__name__, self.acquire('color')
+    ...         print("%s()" % self.__class__.__name__)
+    ...         print(self.acquire('color'))
 
     >>> b=B()
     >>> b.a=A()
     >>> b.a.hi()
-    A red
+    A()
+    red
     >>> b.a.color='green'
     >>> b.a.hi()
-    A green
+    A()
+    green
 
     >>> try:
     ...     A().hi()
-    ...     raise 'Program error', 'spam'
-    ... except AttributeError: pass
-    A
+    ... except AttributeError:
+    ...     pass
+    A()
     """
 
 
@@ -1570,8 +1586,6 @@ def test_cant_pickle_acquisition_wrappers_newstyle():
 
 def test_cant_persist_acquisition_wrappers_classic():
     """
-    >>> import cPickle
-
     >>> class X:
     ...     _p_oid = '1234'
     ...     def __getstate__(self):
@@ -1629,8 +1643,6 @@ def test_cant_persist_acquisition_wrappers_classic():
 
 def test_cant_persist_acquisition_wrappers_newstyle():
     """
-    >>> import cPickle
-
     >>> class X(object):
     ...     _p_oid = '1234'
     ...     def __getstate__(self):
@@ -1760,7 +1772,7 @@ def test_Basic_gc():
     ...
     ...     class C2(Base):
     ...         def __del__(self):
-    ...             print 'removed'
+    ...             print('removed')
     ...
     ...     a=C1('a')
     ...     a.b = C1('a.b')
@@ -1769,7 +1781,7 @@ def test_Basic_gc():
     ...     ignore = gc.collect()
     ...     del a
     ...     removed = gc.collect()
-    ...     print removed > 0
+    ...     print(removed > 0)
     removed
     True
     removed
@@ -1789,7 +1801,7 @@ def test_Wrapper_gc():
     >>> for B in I, E:
     ...     class C:
     ...         def __del__(self):
-    ...             print 'removed'
+    ...             print('removed')
     ...
     ...     a=B('a')
     ...     a.b = B('b')
@@ -1818,18 +1830,18 @@ def test_proxying():
 
     >>> class C(Acquisition.Implicit):
     ...     def __getitem__(self, key):
-    ...         print 'getitem', key
+    ...         print('getitem %s' % key)
     ...         if key == 4:
-    ...             raise IndexError
+    ...             raise IndexError()
     ...         return key
     ...     def __contains__(self, key):
-    ...         print 'contains', repr(key)
+    ...         print('contains %s' % repr(key))
     ...         return key == 5
     ...     def __iter__(self):
-    ...         print 'iterating...'
+    ...         print('iterating...')
     ...         return iter((42,))
     ...     def __getslice__(self, start, end):
-    ...         print 'slicing...'
+    ...         print('slicing...')
     ...         return (start, end)
 
     The naked class behaves like this:
@@ -1882,18 +1894,18 @@ def test_proxying():
 
     >>> class C(Acquisition.Explicit):
     ...     def __getitem__(self, key):
-    ...         print 'getitem', key
+    ...         print('getitem %s' % key)
     ...         if key == 4:
-    ...             raise IndexError
+    ...             raise IndexError()
     ...         return key
     ...     def __contains__(self, key):
-    ...         print 'contains', repr(key)
+    ...         print('contains %s' % repr(key))
     ...         return key == 5
     ...     def __iter__(self):
-    ...         print 'iterating...'
+    ...         print('iterating...')
     ...         return iter((42,))
     ...     def __getslice__(self, start, end):
-    ...         print 'slicing...'
+    ...         print('slicing...')
     ...         return (start, end)
 
     The naked class behaves like this:
@@ -1964,7 +1976,7 @@ def test_proxying():
 
     >>> class C(Acquisition.Implicit):
     ...     def __iter__(self):
-    ...         print 'iterating...'
+    ...         print('iterating...')
     ...         for i in range(5):
     ...             yield i, self.aq_parent.name
     >>> c = C()

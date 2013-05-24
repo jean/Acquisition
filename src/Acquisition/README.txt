@@ -14,7 +14,7 @@ class. For example::
 
   >>> class A(Acquisition.Implicit):
   ...     def report(self):
-  ...         print self.color
+  ...         print(self.color)
   ...
   >>> a = A()
   >>> c = C()
@@ -87,7 +87,7 @@ When explicit acquisition is used, attributes are not automatically
 obtained from the environment. Instead, the method aq_acquire must be
 used. For example::
 
-  >>> print c.a.aq_acquire('color')
+  >>> print(c.a.aq_acquire('color'))
   red
 
 To support explicit acquisition, your class should inherit from the
@@ -172,7 +172,7 @@ Here's an example::
   >>> def find_nice(self, ancestor, name, object, extra):
   ...     return hasattr(object,'isNice') and object.isNice
 
-  >>> print a.b.c.aq_acquire('p', find_nice)
+  >>> print(a.b.c.aq_acquire('p', find_nice))
   spam(Nice) and I am nice!
 
 The filtered acquisition in the last line skips over the first
@@ -201,7 +201,7 @@ method. For example::
   >>> a = C()
   >>> b = C()
   >>> a.color = "red"
-  >>> print b.__of__(a).color
+  >>> print(b.__of__(a).color)
   red
 
 In this case, ``a`` does not contain ``b``, but it is put in ``b``'s
@@ -221,7 +221,7 @@ acquisition context that includes non-container objects::
   >>> a.b.color = "red"
   >>> a.x = C("x")
 
-  >>> print a.b.x.color
+  >>> print(a.b.x.color)
   red
 
 Even though ``b`` does not contain ``x``, ``x`` can acquire the color
@@ -242,7 +242,7 @@ If in the example above suppose both a and b have an color attribute::
   >>> a.b.color = "red"
   >>> a.x = C("x")
 
-  >>> print a.b.x.color
+  >>> print(a.b.x.color)
   green
 
 Why does ``a.b.x.color`` acquire color from ``a`` and not from ``b``?
