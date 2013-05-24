@@ -11,6 +11,8 @@ if not 'PURE_PYTHON' in os.environ:  # pragma no cover
         from Acquisition._Acquisition import *  # NOQA
     except ImportError:
         from Acquisition.acquisition import *  # NOQA
+else:
+    from Acquisition.acquisition import *  # NOQA
 
 
 classImplements(Explicit, IAcquirer)
