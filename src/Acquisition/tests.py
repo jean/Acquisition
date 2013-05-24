@@ -1468,7 +1468,7 @@ def test_creating_wrappers_directly():
     >>> w = ImplicitAcquisitionWrapper(obj=1)
     Traceback (most recent call last):
     ...
-    TypeError: kwyword arguments not allowed
+    TypeError: keyword arguments not allowed
     """
 
 

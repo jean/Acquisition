@@ -166,7 +166,7 @@ Wrapper__init__(Wrapper *self, PyObject *args, PyObject *kwargs)
   if (kwargs && PyDict_Size(kwargs) != 0)
     {
       PyErr_SetString(PyExc_TypeError,
-                      "kwyword arguments not allowed");
+                      "keyword arguments not allowed");
       return -1;
     }
 
