@@ -69,7 +69,7 @@
     that performs attribute lookup in 'c' when an attribute
     cannot be found in 'a'.
 
-    Aquisition wrappers provide access to the wrapped objects
+    Acquisition wrappers provide access to the wrapped objects
     through the attributes 'aq_parent', 'aq_self', 'aq_base'.
     In the example above, the expressions::
 
@@ -96,14 +96,14 @@
   Acquisition Control
 
     Two styles of acquisition are supported in the current
-    ExtensionClass release, implicit and explicit aquisition.
+    ExtensionClass release, implicit and explicit acquisition.
 
     Implicit acquisition
 
       Implicit acquisition is so named because it searches for
       attributes from the environment automatically whenever an
       attribute cannot be obtained directly from an object or
-      through inheritence.
+      through inheritance.
 
       An attribute may be implicitly acquired if it's name does
       not begin with an underscore, '_'.
@@ -127,7 +127,7 @@
       A class (or instance) can provide attribute by attribute control
       over acquisition.  This is done by:
 
-      - subclassing from 'Acquisition.Explicit', and
+      - sub-classing from 'Acquisition.Explicit', and
 
       - setting all attributes that should be acquired to the special
         value: 'Acquisition.Acquired'.  Setting an attribute to this
@@ -249,7 +249,7 @@
     classes.
 
     Unfortunately, C methods defined in extension base classes that
-    define their own data structures, cannot use aquired attributes at
+    define their own data structures, cannot use acquired attributes at
     this time.  This is because wrapper objects do not conform to the
     data structures expected by these methods.
 
@@ -279,7 +279,7 @@
     earlier versions of ExtensionClass, however, this expression
     failed.  Acquired acquiring objects did not acquire from the
     environment they were accessed in, because objects were only
-    wrapped when they were first found, and were not rewrapped as they
+    wrapped when they were first found, and were not re-wrapped as they
     were passed down the acquisition tree.
 
     In the current release of ExtensionClass, the expression "o.color"
@@ -327,24 +327,29 @@
    "Environmental Acquisition--A New Inheritance-Like Abstraction Mechanism",
    http://www.bell-labs.com/people/cope/oopsla/Oopsla96TechnicalProgramAbstracts.html#GilLorenz,
    OOPSLA '96 Proceedings, ACM SIG-PLAN, October, 1996
-
-$Id$
 """
 
 import ExtensionClass
 import Acquisition
 
+
 class I(Acquisition.Implicit):
+
     def __init__(self, id):
         self.id = id
+
     def __repr__(self):
         return self.id
 
+
 class E(Acquisition.Explicit):
+
     def __init__(self, id):
         self.id = id
+
     def __repr__(self):
         return self.id
+
 
 def test_unwrapped():
     """
@@ -408,10 +413,8 @@ def test_unwrapped():
 
     >>> Acquisition.aq_self(c) is c
     1
-
-
-
     """
+
 
 def test_simple():
     """
@@ -554,6 +557,7 @@ def test_simple():
     True
     """
 
+
 def test__of__exception():
     """
     Wrapper_findattr did't check for an exception in a user defined
@@ -578,8 +582,8 @@ def test__of__exception():
     Traceback (most recent call last):
     ...
     UserError: ack
-
     """
+
 
 def test_muliple():
     r"""
@@ -826,9 +830,8 @@ def test_muliple():
     Traceback (most recent call last):
     ...
     AttributeError: y
-
-
     """
+
 
 def test_pinball():
     r"""
@@ -943,8 +946,8 @@ def test_pinball():
     a1
     |
     a
-
     """
+
 
 def test_explicit():
     """
@@ -1076,8 +1079,8 @@ def test_explicit():
 
     >>> show(Acquisition.aq_self(a.b.c))
     c
-
     """
+
 
 def test_mixed_explicit_and_explicit():
     """
@@ -1213,7 +1216,6 @@ def test_mixed_explicit_and_explicit():
 
     >>> show(Acquisition.aq_self(a.b.c))
     c
-
     """
 
 
@@ -1325,6 +1327,7 @@ def test_aq_inContextOf():
     0
     """
 
+
 def test_AqAlg():
     """
     >>> A=I('A')
@@ -1383,8 +1386,8 @@ def test_AqAlg():
     >>> Acquisition.aq_get(A.B.C.D, "color", None)
     'red'
     >>> Acquisition.aq_get(A.B.C.D, "color", None, 1)
-
     """
+
 
 def test_explicit_acquisition():
     """
@@ -1411,8 +1414,8 @@ def test_explicit_acquisition():
     ...     raise 'Program error', 'spam'
     ... except AttributeError: pass
     A
-
     """
+
 
 def test_creating_wrappers_directly():
     """
@@ -1468,6 +1471,7 @@ def test_creating_wrappers_directly():
     TypeError: kwyword arguments not allowed
     """
 
+
 def test_cant_pickle_acquisition_wrappers_classic():
     """
     >>> import pickle
@@ -1515,6 +1519,7 @@ def test_cant_pickle_acquisition_wrappers_classic():
     TypeError: Can't pickle objects in acquisition wrappers.
     """
 
+
 def test_cant_pickle_acquisition_wrappers_newstyle():
     """
     >>> import pickle
@@ -1561,6 +1566,7 @@ def test_cant_pickle_acquisition_wrappers_newstyle():
     ...
     TypeError: Can't pickle objects in acquisition wrappers.
     """
+
 
 def test_cant_persist_acquisition_wrappers_classic():
     """
@@ -1706,17 +1712,23 @@ def test_interfaces():
     True
     """
 
+
 def show(x):
-    print showaq(x).strip()
+    print(showaq(x).strip())
+
 
 def showaq(m_self, indent=''):
     rval = ''
     obj = m_self
     base = getattr(obj, 'aq_base', obj)
-    try: id = base.id
-    except: id = str(base)
-    try: id = id()
-    except: pass
+    try:
+        id = base.id
+    except:
+        id = str(base)
+    try:
+        id = id()
+    except:
+        pass
 
     if hasattr(obj, 'aq_self'):
         if hasattr(obj.aq_self, 'aq_self'):
@@ -1732,7 +1744,6 @@ def showaq(m_self, indent=''):
     else:
         rval = rval + indent + id + "\n"
     return rval
-
 
 
 def test_Basic_gc():
@@ -1765,8 +1776,8 @@ def test_Basic_gc():
     True
 
     >>> gc.set_threshold(*thresholds)
-
     """
+
 
 def test_Wrapper_gc():
     """Test to make sure that EC instances participate in GC
@@ -1794,8 +1805,7 @@ def test_Wrapper_gc():
     True
 
     >>> gc.set_threshold(*thresholds)
-
-"""
+    """
 
 
 def test_proxying():
@@ -2001,14 +2011,16 @@ def test_proxying():
     Traceback (most recent call last):
       ...
     TypeError: iter() returned non-iterator of type 'list'
-
     """
+
 
 class Location(object):
     __parent__ = None
 
+
 class ECLocation(ExtensionClass.Base):
     __parent__ = None
+
 
 def test___parent__no_wrappers():
     """
@@ -2060,6 +2072,7 @@ def test___parent__no_wrappers():
       >>> Acquisition.aq_chain(x) == [x, y, z]
       True
     """
+
 
 def test_implicit_wrapper_as___parent__():
     """
@@ -2142,6 +2155,7 @@ def test_implicit_wrapper_as___parent__():
       AttributeError: __parent__
     """
 
+
 def test_explicit_wrapper_as___parent__():
     """
     Let's do this test yet another time, with an explicit wrapper:
@@ -2221,6 +2235,7 @@ def test_explicit_wrapper_as___parent__():
       AttributeError: __parent__
     """
 
+
 def test_implicit_wrapper_has_nonwrapper_as_aq_parent():
     """Let's do this the other way around: The root and the
     intermediate parent is an object that doesn't support acquisition,
@@ -2285,6 +2300,7 @@ def test_implicit_wrapper_has_nonwrapper_as_aq_parent():
       3.145
     """
 
+
 def test_explicit_wrapper_has_nonwrapper_as_aq_parent():
     """Let's do this the other way around: The root and the
     intermediate parent is an object that doesn't support acquisition,
@@ -2338,6 +2354,7 @@ def test_explicit_wrapper_has_nonwrapper_as_aq_parent():
       >>> x.aq_chain == [x, y, z]
       True
     """
+
 
 def test___parent__aq_parent_circles():
     """
@@ -2396,23 +2413,25 @@ def test___parent__aq_parent_circles():
       RuntimeError: Recursion detected in acquisition wrapper
     """
 
+
 def test_unwrapped_implicit_acquirer_unwraps__parent__():
     """
     Set up an implicit acquirer with a parent:
-    
+
     >>> class Impl(Acquisition.Implicit):
     ...     pass
-    
+
     >>> y = Impl()
     >>> x = Impl()
     >>> x.__parent__ = y
-    
+
     Now if we retrieve the parent from the (unwrapped) instance,
     the parent should not be wrapped in the instance's acquisition chain.
-    
+
     >>> x.__parent__ is y
     True
     """
+
 
 def test__iter__after_AttributeError():
     """ See https://bugs.launchpad.net/zope2/+bug/1155760
@@ -2441,6 +2460,7 @@ class TestParent(unittest.TestCase):
     def test_parent_parent_circles(self):
         class Impl(Acquisition.Implicit):
             hello = 'world'
+
         class Impl2(Acquisition.Implicit):
             hello = 'world2'
             only = 'here'
@@ -2455,15 +2475,17 @@ class TestParent(unittest.TestCase):
         self.assertEqual(Acquisition.aq_acquire(x, 'only'), 'here')
 
         self.assertRaises(AttributeError, Acquisition.aq_acquire,
-            x, 'non_existant_attr')
+                          x, 'non_existant_attr')
         self.assertRaises(AttributeError, Acquisition.aq_acquire,
-            y, 'non_existant_attr')
+                          y, 'non_existant_attr')
 
     def test_parent_parent_parent_circles(self):
         class Impl(Acquisition.Implicit):
             hello = 'world'
+
         class Impl2(Acquisition.Implicit):
             hello = 'world'
+
         class Impl3(Acquisition.Implicit):
             hello = 'world2'
             only = 'here'
@@ -2499,8 +2521,10 @@ class TestAcquire(unittest.TestCase):
     def setUp(self):
         class Impl(Acquisition.Implicit):
             pass
+
         class Expl(Acquisition.Explicit):
             pass
+
         a = Impl('a')
         a.y = 42
         a.b = Expl('b')
@@ -2586,4 +2610,4 @@ def test_suite():
         unittest.makeSuite(TestParent),
         unittest.makeSuite(TestAcquire),
         unittest.makeSuite(TestUnicode),
-        ))
+    ))

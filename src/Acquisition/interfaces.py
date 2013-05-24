@@ -10,17 +10,12 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""Acquisition z3 interfaces.
-
-$Id$
-"""
 
 from zope.interface import Attribute
 from zope.interface import Interface
 
 
 class IAcquirer(Interface):
-
     """Acquire attributes from containers.
     """
 
@@ -30,7 +25,6 @@ class IAcquirer(Interface):
 
 
 class IAcquisitionWrapper(Interface):
-
     """Wrapper object for acquisition.
     """
 
@@ -43,26 +37,12 @@ class IAcquisitionWrapper(Interface):
         """Test whether the object is currently in the context of the argument.
         """
 
-    aq_base = Attribute(
-        """Get the object unwrapped."""
-        )
-
-    aq_parent = Attribute(
-        """Get the parent of an object."""
-        )
-
-    aq_self = Attribute(
-        """Get the object with the outermost wrapper removed."""
-        )
-
+    aq_base = Attribute("Get the object unwrapped.")
+    aq_parent = Attribute("Get the parent of an object.")
+    aq_self = Attribute("Get the object with the outermost wrapper removed.")
     aq_inner = Attribute(
-        """Get the object with all but the innermost wrapper removed."""
-        )
-
+        "Get the object with all but the innermost wrapper removed.")
     aq_chain = Attribute(
-        """Get a list of objects in the acquisition environment."""
-        )
-
+        "Get a list of objects in the acquisition environment.")
     aq_explicit = Attribute(
-        """Get the object with an explicit acquisition wrapper."""
-        )
+        "Get the object with an explicit acquisition wrapper.")
