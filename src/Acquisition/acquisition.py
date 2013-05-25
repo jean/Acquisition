@@ -27,6 +27,23 @@ class ExplicitAcquirer(Base):
 
 class _Wrapper(Base):
 
+    def __init__(self, *args, **kwargs):
+        if kwargs:
+            raise TypeError("keyword arguments not allowed")
+        if len(args) != 2:
+            raise TypeError(
+                "__init__() takes exactly 2 arguments (%s given)" % len(args))
+        obj, container = args
+        if self == obj:
+            raise ValueError(
+                "Cannot wrap acquisition wrapper in itself (Wrapper__init__)")
+        self.obj = obj
+        if container is not None:
+            self.container = container
+
+    def __hash__(self):
+        return hash(self.obj)
+
     def acquire(self, *args, **kw):
         """Get an attribute, acquiring it if necessary"""
 
@@ -53,18 +70,16 @@ class _Wrapper(Base):
         raise TypeError("Can't pickle objects in acquisition wrappers.")
 
 
+def _isWrapper(ob):
+    return isinstance(ob, _Wrapper)
+
+
 class ExplicitAcquisitionWrapper(_Wrapper):
     """Wrapper object for implicit acquisition"""
-
-    def __init__(self, *args, **kwargs):
-        pass
 
 
 class ImplicitAcquisitionWrapper(_Wrapper):
     """Wrapper object for implicit acquisition"""
-
-    def __init__(self, *args, **kwargs):
-        pass
 
 
 class Explicit(ExplicitAcquirer):
