@@ -251,7 +251,7 @@ def _isWrapper(ob):
 
 
 class ExplicitAcquisitionWrapper(_Wrapper):
-    """Wrapper object for implicit acquisition"""
+    """Wrapper object for explicit acquisition"""
 
 
 class ImplicitAcquisitionWrapper(_Wrapper):

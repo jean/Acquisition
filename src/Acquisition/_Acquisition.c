@@ -1423,7 +1423,7 @@ static PyExtensionClass XaqWrappertype = {
                           | Py_TPFLAGS_HAVE_VERSION_TAG
 #endif
                           ,
-  "Wrapper object for implicit acquisition", /* Documentation string */
+  "Wrapper object for explicit acquisition", /* Documentation string */
   /* tp_traverse       */ (traverseproc)Wrapper_traverse,
   /* tp_clear          */ (inquiry)Wrapper_clear,
   /* tp_richcompare    */ (richcmpfunc)Wrapper_richcompare,
